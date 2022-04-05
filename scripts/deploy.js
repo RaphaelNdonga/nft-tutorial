@@ -1,3 +1,5 @@
+const pinataJs = require('../pinata');
+
 const main = async () => {
     const [deployer] = await hre.ethers.getSigners();
     const selfieNFTContractFactory = await hre.ethers.getContractFactory("SelfieNFT");
@@ -5,6 +7,9 @@ const main = async () => {
     await selfieNFTContract.deployed();
     console.log("Contract deployed at address: ", selfieNFTContract.address);
     console.log("Contract deployed by: ", deployer.address);
+    console.log("Pinata: ", pinataJs.pinFile)
+    const promiseURL = await pinataJs.pinFile();
+    console.log("Promise url: ", promiseURL)
 }
 
 const runMain = async () => {

@@ -19,56 +19,68 @@ let fileOptions = {
     }
 }
 
-const pinFile = pinata.pinFileToIPFS(readableStream, fileOptions).then((output) => {
-    uri = `https://ipfs.io/ipfs/${output.IpfsHash}?filename=${filename}`
-    console.log(uri)
-    return uri
-}).catch((error) => {
-    console.log(error)
-}).then(async (uri) => {
-    //Personalize these variables
+module.exports = {
 
-    let name = "Raphael"
-    let description = "A handsome young man destined for greatness"
+    pinFile: async function () {
+        const pinataPinFile = pinata.pinFileToIPFS(readableStream, fileOptions).then((output) => {
+            uri = `https://ipfs.io/ipfs/${output.IpfsHash}?filename=${filename}`
+            console.log(uri)
+            return uri
+        }).catch((error) => {
+            console.log(error)
+        }).then(async (uri) => {
+            //Personalize these variables
+
+            let name = "Raphael"
+            let description = "A handsome young man destined for greatness"
 
 
-    const body = {
-        "name": name,
-        "description": description,
-        "image": uri,
-        "attributes": [{
-            "trait_type": "Strength",
-            "value": "100"
-        },
-        {
-            "trait_type": "Self Control",
-            "value": "100"
-        }
-        ]
+            const body = {
+                "name": name,
+                "description": description,
+                "image": uri,
+                "attributes": [{
+                    "trait_type": "Strength",
+                    "value": "100"
+                },
+                {
+                    "trait_type": "Self Control",
+                    "value": "100"
+                }
+                ]
+            }
+            const jsonFileName = 'avatar.json'
+
+            const jsonOptions = {
+                pinataMetadata: {
+                    name: `${jsonFileName}`
+                }
+            }
+
+
+            const pinJSON = pinata.pinJSONToIPFS(body, jsonOptions).then((output) => {
+                uri = `https://ipfs.io/ipfs/${output.IpfsHash}?filename=${jsonFileName}`
+                console.log(uri)
+                return uri
+            })
+            // console.log("X is ", x)
+            // console.log("figuring out promise then: ")
+            return Promise.all([pinJSON]).then((result) => {
+                console.log("The result : ", result)
+                return result[0]
+            })
+
+
+        })
+        return Promise.all([pinataPinFile]).then((result) => {
+            console.log("The final result: ", result)
+            return result[0]
+        })
     }
-    const jsonFileName = 'avatar.json'
+}
 
-    const jsonOptions = {
-        pinataMetadata: {
-            name: `${jsonFileName}`
-        }
-    }
-
-
-    const pinJSON = pinata.pinJSONToIPFS(body, jsonOptions).then((output) => {
-        uri = `https://ipfs.io/ipfs/${output.IpfsHash}?filename=${jsonFileName}`
-        console.log(uri)
-        return uri
-    })
-    // console.log("X is ", x)
-    // console.log("figuring out promise then: ")
-    return Promise.all([pinJSON]).then((result) => {
-        console.log("The result will be undefined: ", result)
-        return result[0]
-    })
-})
-console.log("pinFile is ", pinFile)
-console.log("figuring out promise then: ")
-Promise.all([pinFile]).then((result) => {
-    console.log("The result will be undefined: ", result)
-})
+// console.log("pinFile is ", pinFile)
+// console.log("figuring out promise then: ")
+// Promise.all([pinFile]).then((result) => {
+//     console.log("The result will be undefined: ", result)
+// })
