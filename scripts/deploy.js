@@ -7,9 +7,15 @@ const main = async () => {
     await selfieNFTContract.deployed();
     console.log("Contract deployed at address: ", selfieNFTContract.address);
     console.log("Contract deployed by: ", deployer.address);
-    console.log("Pinata: ", pinataJs.pinFile)
-    const promiseURL = await pinataJs.pinFile();
+    const promiseURL = await pinataJs.pinataFunction();
     console.log("Promise url: ", promiseURL)
+    const tokenID = await selfieNFTContract.getTokenId()
+    const txn = await selfieNFTContract.createNFT(promiseURL)
+    await txn.wait()
+    console.log("OpenSea address: ")
+    console.log(`https://testnets.opensea.io/assets/${selfieNFTContract.address}/${tokenID}`)
+    console.log("Rarible address:")
+    console.log(`https://rinkeby.rarible.com/token/${selfieNFTContract.address}:${tokenID}`)
 }
 
 const runMain = async () => {

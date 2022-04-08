@@ -1,6 +1,5 @@
 const fs = require('fs')
 const pinataSdk = require('@pinata/sdk')
-const { resolve } = require('path')
 const pinata = pinataSdk('f2e0188887f4b5ae161f', '92ae688fbe61ce9abcf496ffee7efd82b56eeaf9838293b49e25134280f6cc53')
 
 //place your file name here
@@ -21,8 +20,8 @@ let fileOptions = {
 
 module.exports = {
 
-    pinFile: async function () {
-        const pinataPinFile = pinata.pinFileToIPFS(readableStream, fileOptions).then((output) => {
+    pinataFunction: async function () {
+        const pinFile = pinata.pinFileToIPFS(readableStream, fileOptions).then((output) => {
             uri = `https://ipfs.io/ipfs/${output.IpfsHash}?filename=${filename}`
             console.log(uri)
             return uri
@@ -63,8 +62,7 @@ module.exports = {
                 console.log(uri)
                 return uri
             })
-            // console.log("X is ", x)
-            // console.log("figuring out promise then: ")
+
             return Promise.all([pinJSON]).then((result) => {
                 console.log("The result : ", result)
                 return result[0]
@@ -72,15 +70,9 @@ module.exports = {
 
 
         })
-        return Promise.all([pinataPinFile]).then((result) => {
+        return Promise.all([pinFile]).then((result) => {
             console.log("The final result: ", result)
             return result[0]
         })
     }
 }
-
-// console.log("pinFile is ", pinFile)
-// console.log("figuring out promise then: ")
-// Promise.all([pinFile]).then((result) => {
-//     console.log("The result will be undefined: ", result)
-// })

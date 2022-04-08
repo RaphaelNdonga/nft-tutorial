@@ -15,4 +15,8 @@ contract SelfieNFT is ERC721URIStorage {
         _setTokenURI(tokenId, _tokenURI);
         tokenId++;
     }
+
+    function getTokenId() public view returns (uint256) {
+        return tokenId;
+    }
 }
